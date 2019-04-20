@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Col, Row, Select } from 'antd';
+import { Icon, Col, Row, Select, Tooltip } from 'antd';
 import Post from './Post';
 import Comments from './Comments';
 
@@ -60,6 +61,18 @@ class PostDetail extends Component {
           </Row>
         )}
         <Comments comments={comments} />
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            padding: '16px 12px'
+          }}
+        >
+          <Tooltip title="Close">
+            <Icon type="close" onClick={() => this.props.history.push('/')} />
+          </Tooltip>
+        </div>
       </Col>
     );
   }
@@ -73,4 +86,4 @@ const mapStateToProps = ({ comments }, { post }) => ({
   comments: comments[post.id] || {}
 });
 
-export default connect(mapStateToProps)(PostDetail);
+export default withRouter(connect(mapStateToProps)(PostDetail));
