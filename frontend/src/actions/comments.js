@@ -2,8 +2,10 @@ import {
   createComment,
   deleteComment,
   getComments,
-  voteComment
+  voteComment,
+  updateComment as alterComment
 } from '../utils/api';
+import { error } from '../utils/helpers';
 
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const DELETE_COMMENT = 'DELETE_COMMENT';
@@ -31,22 +33,29 @@ const updateComment = comment => ({
   comment
 });
 
-export const newComment = ({ author, body, parentId }) => dispatch =>
-  createComment({ author, body, parentId }).then(comment => {
-    dispatch(addComment(comment));
-  });
+export const newComment = ({ body, parentId }) => dispatch =>
+  createComment({ body, parentId })
+    .then(comment => {
+      dispatch(addComment(comment));
+    })
+    .catch(() => error('The comment could not be saved!'));
 
 export const removeComment = comment => dispatch =>
-  deleteComment(comment.id).then(deletedComment =>
-    dispatch(delComment(deletedComment))
-  );
+  deleteComment(comment.id)
+    .then(deletedComment => dispatch(delComment(deletedComment)))
+    .catch(() => error('The comment could not be deleted!'));
 
 export const retrieveComments = postId => dispatch =>
-  getComments(postId).then(comments =>
-    dispatch(receiveComments(comments, postId))
-  );
+  getComments(postId)
+    .then(comments => dispatch(receiveComments(comments, postId)))
+    .catch(() => error('Could not get comments!'));
 
 export const voteInComment = (comment, option) => dispatch =>
-  voteComment(comment.id, option).then(updatedPost =>
-    dispatch(updateComment(updatedPost))
-  );
+  voteComment(comment.id, option)
+    .then(updatedPost => dispatch(updateComment(updatedPost)))
+    .catch(() => error('Could not register the vote!'));
+
+export const editComment = (comment, body) => dispatch =>
+  alterComment(comment.id, body)
+    .then(updatedComment => dispatch(updateComment(updatedComment)))
+    .catch(() => error('The comment could not be updated!'));

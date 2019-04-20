@@ -10,7 +10,12 @@ export default function posts(state = {}, action) {
     case ADD_POST:
       return { ...state, [action.post.id]: action.post };
     case DELETE_POST:
-      return state;
+      return Object.keys(state)
+        .filter(key => key !== action.post.id)
+        .reduce((result, current) => {
+          result[current] = state[current];
+          return result;
+        }, {});
     case RECEIVE_POSTS:
       return { ...action.posts };
     case UPDATE_POST:

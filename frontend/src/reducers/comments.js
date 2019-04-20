@@ -16,7 +16,15 @@ export default function comments(state = {}, action) {
         }
       };
     case DELETE_COMMENT:
-      return state;
+      return {
+        ...state,
+        [action.comment.parentId]: Object.keys(state[action.comment.parentId])
+          .filter(key => key !== action.comment.id)
+          .reduce((result, current) => {
+            result[current] = state[action.comment.parentId][current];
+            return result;
+          }, {})
+      };
     case RECEIVE_COMMENTS:
       const { postId } = action;
       return { ...state, [postId]: action.comments };
