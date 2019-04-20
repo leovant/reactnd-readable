@@ -123,7 +123,7 @@ class Posts extends Component {
             );
           })}
         </Col>
-        <div style={{ position: 'fixed', bottom: 16, right: 16, zIndex: 100 }}>
+        <div style={{ position: 'fixed', bottom: 25, right: 25, zIndex: 100 }}>
           <Button
             type="primary"
             icon="plus"

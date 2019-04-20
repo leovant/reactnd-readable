@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Button, Comment, Icon, Input, Tooltip } from 'antd';
+import { Button, Comment, Icon, Input, Popconfirm, Tooltip } from 'antd';
 import { dateTime, fromNow } from '../utils/helpers';
 import { editPost, removePost, voteInPost } from '../actions/posts';
 
@@ -62,7 +62,7 @@ class Post extends Component {
           </Tooltip>
         }
         actions={[
-          <span>
+          <span style={{ marginRight: 10, fontSize: 14 }}>
             <Tooltip title="Like">
               <Icon type="like" onClick={() => this.vote('upVote')} />
             </Tooltip>
@@ -72,28 +72,28 @@ class Post extends Component {
             </Tooltip>
           </span>,
           <Link to={`/${post.category}/${post.id}`}>
-            <Button icon="message" size="small" style={{ border: 'none' }}>
-              <span>{post.commentCount} comments</span>
-            </Button>
+            <Icon type="message" />
+            <span style={{ padding: 10 }}>{post.commentCount} comments</span>
           </Link>,
           !editing && (
-            <span>
+            <span style={{ marginLeft: 10 }}>
               <Button icon="edit" size="small" onClick={() => this.edit(post)}>
                 Edit
               </Button>
-              ,
-              <Button
-                icon="delete"
-                size="small"
-                onClick={() => this.delete()}
-                style={{ marginLeft: 10 }}
+              <Popconfirm
+                title="Are you sure about delete this post?"
+                onConfirm={this.delete}
+                okText="Yes"
+                cancelText="No"
               >
-                Delete
-              </Button>
+                <Button icon="delete" size="small" style={{ marginLeft: 10 }}>
+                  Delete
+                </Button>
+              </Popconfirm>
             </span>
           ),
           editing && (
-            <span>
+            <span style={{ marginLeft: 10 }}>
               <Button
                 type="primary"
                 icon="save"

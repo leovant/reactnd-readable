@@ -18,7 +18,7 @@ class App extends Component {
     return (
       <Router>
         <Layout>
-          <Header>
+          <Header style={{ backgroundColor: '#40a9ff' }}>
             <PageHeader
               title="Readable"
               extra={<CategoriesMenu categories={this.props.categories} />}

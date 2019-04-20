@@ -6,6 +6,7 @@ import {
   Comment as CommentComponent,
   Icon,
   Input,
+  Popconfirm,
   Tooltip
 } from 'antd';
 import { dateTime, fromNow } from '../utils/helpers';
@@ -61,7 +62,7 @@ class Comment extends Component {
           </Tooltip>
         }
         actions={[
-          <span>
+          <span style={{ marginRight: 10, fontSize: 14 }}>
             <Tooltip title="Like">
               <Icon type="like" onClick={() => this.vote('upVote')} />
             </Tooltip>
@@ -79,15 +80,16 @@ class Comment extends Component {
               >
                 Edit
               </Button>
-              ,
-              <Button
-                icon="delete"
-                size="small"
-                onClick={() => this.delete()}
-                style={{ marginLeft: 10 }}
+              <Popconfirm
+                title="Are you sure about delete this comment?"
+                onConfirm={this.delete}
+                okText="Yes"
+                cancelText="No"
               >
-                Delete
-              </Button>
+                <Button icon="delete" size="small" style={{ marginLeft: 10 }}>
+                  Delete
+                </Button>
+              </Popconfirm>
             </span>
           ),
           editing && (
@@ -120,7 +122,7 @@ class Comment extends Component {
               />
             </div>
           ) : (
-            <p>{comment.body}</p>
+            <p style={{ margin: '10px 0 20px 0' }}>{comment.body}</p>
           )
         }
       />
