@@ -42,7 +42,7 @@ class PostPage extends Component {
       }
       dispatch(newComment({ ...values, parentId: id })).then(() => {
         form.resetFields();
-        this.setState(() => ({ visible: false }));
+        this.setState(() => ({ visible: false, loading: false }));
       });
     });
   };

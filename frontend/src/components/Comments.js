@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row } from 'antd';
+import { Col } from 'antd';
 import Comment from './Comment';
 
 class Comments extends PureComponent {
@@ -9,9 +9,6 @@ class Comments extends PureComponent {
 
     return (
       <Col>
-        <Row style={{ marginLeft: 12 }}>
-          <h1>Comments</h1>
-        </Row>
         {Object.keys(comments).map(key => {
           const comment = comments[key];
 

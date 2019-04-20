@@ -113,7 +113,7 @@ class Comment extends Component {
         ]}
         content={
           editing ? (
-            <div>
+            <div style={{ marginRight: 12 }}>
               <Input
                 value={body}
                 onChange={e => this.handleChange(e.target.value)}

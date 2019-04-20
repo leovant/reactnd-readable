@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Select, Row } from 'antd';
 import { newPost, retrievePosts } from '../actions/posts';
 import Post from './Post';
 import PostForm from './PostForm';
@@ -9,7 +9,8 @@ import PostForm from './PostForm';
 class Posts extends Component {
   state = {
     loading: false,
-    visible: false
+    visible: false,
+    orderBy: 'votes'
   };
 
   componentDidMount() {
@@ -39,7 +40,7 @@ class Posts extends Component {
       }
       this.props.dispatch(newPost(values)).then(() => {
         form.resetFields();
-        this.setState(() => ({ visible: false }));
+        this.setState(() => ({ visible: false, loading: false }));
       });
     });
   };
@@ -48,15 +49,66 @@ class Posts extends Component {
     this.formRef = formRef;
   };
 
+  handleOrder = orderBy => this.setState(() => ({ orderBy }));
+
+  sortPosts = () => {
+    const { posts } = this.props;
+    const { orderBy } = this.state;
+
+    switch (orderBy) {
+      case 'date':
+        return Object.keys(posts)
+          .sort((a, b) => posts[b].timestamp - posts[a].timestamp)
+          .reduce((result, current) => {
+            result[current] = posts[current];
+            return result;
+          }, {});
+      case 'comments':
+        return Object.keys(posts)
+          .sort((a, b) => posts[b].commentCount - posts[a].commentCount)
+          .reduce((result, current) => {
+            result[current] = posts[current];
+            return result;
+          }, {});
+      default:
+        return Object.keys(posts)
+          .sort((a, b) => {
+            if (posts[a].voteScore > posts[b].voteScore) return -1;
+            if (posts[b].voteScore > posts[a].voteScore) return 1;
+
+            return 0;
+          })
+          .reduce((result, current) => {
+            result[current] = posts[current];
+            return result;
+          }, {});
+    }
+  };
+
   render() {
-    const { posts, category } = this.props;
-    const { visible, loading } = this.state;
+    const { category } = this.props;
+    const { visible, loading, orderBy } = this.state;
+    const posts = this.sortPosts();
 
     return (
       <Fragment>
         <Col>
-          <Row style={{ margin: '20px 50px' }}>
-            <h1>Showing posts to {category ? `/${category}` : '/'}</h1>
+          <Row style={{ margin: '20px 50px', display: 'flex' }}>
+            <h1 style={{ flexGrow: 1 }}>
+              Showing posts in {category ? `/${category}` : '/all'}
+            </h1>
+            <div>
+              <span style={{ marginRight: 5 }}>Order by:</span>
+              <Select
+                defaultValue={orderBy}
+                onChange={this.handleOrder}
+                style={{ width: 200 }}
+              >
+                <Select.Option value="votes">Best voted</Select.Option>
+                <Select.Option value="date">Most recent</Select.Option>
+                <Select.Option value="comments">Most commented</Select.Option>
+              </Select>
+            </div>
           </Row>
           {Object.keys(posts).map(key => {
             const post = posts[key];
