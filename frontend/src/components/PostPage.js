@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button } from 'antd';
 import PostDetail from './PostDetail';
@@ -9,14 +10,17 @@ import { newComment, retrieveComments } from '../actions/comments';
 class PostPage extends Component {
   state = {
     loading: false,
-    visible: false
+    visible: false,
+    toHome: false
   };
 
   componentDidMount() {
     const { id, posts, comments, dispatch } = this.props;
 
     if (!posts[id]) {
-      dispatch(getSinglePost(id));
+      dispatch(getSinglePost(id)).then(res =>
+        this.setState(() => ({ toHome: res ? false : true }))
+      );
     }
     if (!comments[id]) {
       dispatch(retrieveComments(id));
@@ -52,9 +56,13 @@ class PostPage extends Component {
   };
 
   render() {
-    const { visible, loading } = this.state;
+    const { visible, loading, toHome } = this.state;
     const { id, posts } = this.props;
     const post = posts[id] || {};
+
+    if (toHome === true) {
+      return <Redirect to="/" />;
+    }
 
     return (
       <Fragment>

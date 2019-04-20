@@ -55,7 +55,12 @@ export const voteInPost = (post, option) => dispatch =>
 
 export const getSinglePost = id => dispatch =>
   getPost(id)
-    .then(post => dispatch(updatePost(post)))
+    .then(post => {
+      if (!post.id || post.deleted) {
+        return error('Post not found!');
+      }
+      return dispatch(updatePost(post));
+    })
     .catch(() => error('Could not get post data!'));
 
 export const editPost = (post, title, body) => dispatch =>

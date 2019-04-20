@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Button, Comment, Icon, Input, Popconfirm, Tooltip } from 'antd';
 import { dateTime, fromNow } from '../utils/helpers';
 import { editPost, removePost, voteInPost } from '../actions/posts';
@@ -40,7 +40,9 @@ class Post extends Component {
 
   delete = () => {
     const { post, dispatch } = this.props;
-    dispatch(removePost(post));
+    dispatch(removePost(post)).then(() => {
+      this.props.history.push(`/`);
+    });
   };
 
   vote = option => {
@@ -145,4 +147,4 @@ Post.propTypes = {
   post: PropTypes.object.isRequired
 };
 
-export default connect()(Post);
+export default withRouter(connect()(Post));
