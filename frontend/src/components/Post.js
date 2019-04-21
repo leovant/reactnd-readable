@@ -75,7 +75,10 @@ class Post extends Component {
           </span>,
           <Link to={`/${post.category}/${post.id}`}>
             <Icon type="message" />
-            <span style={{ padding: 10 }}>{post.commentCount} comments</span>
+            <span style={{ padding: 10 }}>
+              {post.commentCount}
+              {post.commentCount === 1 ? ' comment' : ' comments'}
+            </span>
           </Link>,
           !editing && (
             <span style={{ marginLeft: 10 }}>

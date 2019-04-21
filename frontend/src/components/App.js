@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Layout, PageHeader } from 'antd';
 import Posts from './Posts';
 import CategoriesMenu from './CategoriesMenu';
@@ -9,11 +10,7 @@ import { retrieveCategories } from '../actions/categories';
 
 const { Header, Content } = Layout;
 
-class App extends Component {
-  componentDidMount() {
-    this.props.dispatch(retrieveCategories());
-  }
-
+class App extends PureComponent {
   render() {
     return (
       <Router>
@@ -35,6 +32,19 @@ class App extends Component {
   }
 }
 
+App.propTypes = {
+  categories: PropTypes.object.isRequired
+};
+
 const mapStateToProps = ({ categories }) => ({ categories });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => {
+  dispatch(retrieveCategories());
+
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
