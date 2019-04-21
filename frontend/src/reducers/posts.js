@@ -5,6 +5,8 @@ import {
   UPDATE_POST
 } from '../actions/posts';
 
+import { ADD_COMMENT, DELETE_COMMENT } from '../actions/comments';
+
 export default function posts(state = {}, action) {
   switch (action.type) {
     case ADD_POST:
@@ -20,6 +22,22 @@ export default function posts(state = {}, action) {
       return { ...action.posts };
     case UPDATE_POST:
       return { ...state, [action.post.id]: action.post };
+    case ADD_COMMENT:
+      return {
+        ...state,
+        [action.comment.parentId]: {
+          ...state[action.comment.parentId],
+          commentCount: state[action.comment.parentId].commentCount + 1
+        }
+      };
+    case DELETE_COMMENT:
+      return {
+        ...state,
+        [action.comment.parentId]: {
+          ...state[action.comment.parentId],
+          commentCount: state[action.comment.parentId].commentCount - 1
+        }
+      };
     default:
       return state;
   }
